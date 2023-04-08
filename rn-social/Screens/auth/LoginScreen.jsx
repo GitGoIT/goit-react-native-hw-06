@@ -24,7 +24,7 @@ const initialState = {
   password: "",
 };
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [dimensions, setDimentions] = useState(
@@ -32,8 +32,8 @@ export default function LoginScreen() {
   );
 
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
   const keyboardHide = () => {
@@ -58,7 +58,7 @@ export default function LoginScreen() {
       <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           style={styles.bgImage}
-          source={require("../assets/images/photo-bg2x.jpg")}
+          source={require("../../assets/images/photo-bg2x.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -104,7 +104,6 @@ export default function LoginScreen() {
                     <Text style={styles.textPassword}>Показати</Text>
                   </View>
                 </View>
-
                 <TouchableOpacity
                   activeOpacity={0.8}
                   style={styles.btn}
@@ -113,12 +112,13 @@ export default function LoginScreen() {
                   <Text style={styles.btnTitle}>Увійти</Text>
                 </TouchableOpacity>
               </View>
-
-              <TouchableOpacity>
-                <Text style={styles.btnLink} onPress={keyboardHide}>
-                  Немає акаунта? Зареєструватися
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.containerLink}>
+                <Text style={styles.txtLink}>Немає акаунта?</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Registration")}>
+                  <Text style={styles.btnLink}>Зареєструватися</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Roboto-Medium",
-    // fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -185,12 +184,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
   },
-  btnLink: {
+  containerLink: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  txtLink: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
     textAlign: "center",
+  },
+  btnLink: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "blue",
+    textAlign: "center",
+    marginLeft: 5,
   },
   addIcon: {
     position: "absolute",

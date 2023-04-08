@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ImageBackground, Image, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions } from "react-native";
+import { StyleSheet, Text, View, ImageBackground, Image, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions, } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -12,15 +12,15 @@ const initialState = {
     password: "",
 }
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({navigation}) {
 
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
     const [dimensions, setDimentions] = useState(Dimensions.get("window").width - 16 * 2);
 
     const [fontsLoaded] = useFonts({
-      "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-      "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+      "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+      "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
     });
     
     const keyboardHide = () => {
@@ -45,7 +45,7 @@ export default function RegistrationScreen() {
         <View style={styles.container} onLayout={onLayoutRootView}>
           <ImageBackground
             style={styles.bgImage}
-            source={require("../assets/images/photo-bg2x.jpg")}
+            source={require("../../assets/images/photo-bg2x.jpg")}
           >
             <KeyboardAvoidingView
               behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -60,7 +60,7 @@ export default function RegistrationScreen() {
                 <View style={styles.imageWrapper}>
                   <Image />
                   <Image
-                    source={require("../assets/add.png")}
+                    source={require("../../assets/add.png")}
                     style={styles.addIcon}
                   />
                 </View>
@@ -120,12 +120,14 @@ export default function RegistrationScreen() {
                     <Text style={styles.btnTitle}>Зареєструватися</Text>
                   </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity>
-                  <Text style={styles.btnLink} onPress={keyboardHide}>
-                    Вже є акаунт? Увійти
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.containerLink}>
+                  <Text style={styles.txtLink}>Вже є акаунт?</Text>
+                  <TouchableOpacity
+                    style={styles.opacityLink}
+                    onPress={() => navigation.navigate("Login")}>
+                    <Text style={styles.btnLink}>Увійти</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </KeyboardAvoidingView>
           </ImageBackground>
@@ -168,7 +170,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Roboto-Medium",
-    // fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -192,12 +193,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
   },
-  btnLink: {
+  containerLink: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  txtLink: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
     textAlign: "center",
+  },
+  btnLink: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "blue",
+    marginLeft: 5,
   },
   imageWrapper: {
     position: "absolute",

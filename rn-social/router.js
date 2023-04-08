@@ -1,12 +1,12 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native";
 
 ///icons
 import { Feather } from "@expo/vector-icons";
 
-const AuthStack = createNativeStackNavigator();
+const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 import RegistrationScreen from "./Screens/auth/RegistrationScreen";
@@ -44,11 +44,11 @@ export const useRoute = (isAuth) => {
                      tabBarActiveBackgroundColor: "#FF6C00",
                      tabBarActiveTintColor: "#FFFFFF",
                 headerRight: () => (<TouchableOpacity><Feather
-                name="log-out"
-                size={24}
-                color="#BDBDBD"
-                style={{ marginRight: 10 }}/></TouchableOpacity>
-          ),
+                     name="log-out"
+                     size={24}
+                     color="#BDBDBD"
+                    style={{ marginRight: 10 }} /></TouchableOpacity>),
+                    headerTitleAlign: "center",
             }} name="Публікації" component={PostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="plus" size={size} color={color} />),
@@ -56,6 +56,7 @@ export const useRoute = (isAuth) => {
                      tabBarActiveBackgroundColor: "#FF6C00",
                      tabBarActiveTintColor: "#FFFFFF",
                      title: "Створити публікацію",
+                     headerTitleAlign: "center",
             }}name="Створити публікацію" component={CreatePostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="user" size={size} color={color} />),

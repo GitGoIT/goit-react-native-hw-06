@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 const ProfileScreen = () => {
     return (
-        <View style={styles.container}>
-            <Text>ProfileScreen</Text>
-        </View>
+      <View style={styles.container}>
+        <Text>ProfileScreen</Text>
+        <StatusBar style="auto" />
+      </View>
     );
 };
 

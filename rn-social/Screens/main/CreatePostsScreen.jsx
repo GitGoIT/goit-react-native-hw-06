@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { View, Text, StyleSheet, Touchable, TouchableOpacity, Image } from "react-native";
 import { Camera } from "expo-camera";
 import { FontAwesome } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 
 const CreatePostsScreen = () => {
   const [camera, setCamera] = useState(null);
@@ -16,14 +17,19 @@ const CreatePostsScreen = () => {
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} ref={setCamera}>
-        {photo && (<View style={styles.takePhotoContainer}>
-            <Image source={{ uri: photo }} style={{ height: "100%", width: "100%" }}/>
+        {photo && (
+          <View style={styles.takePhotoContainer}>
+            <Image
+              source={{ uri: photo }}
+              style={{ height: "100%", width: "100%" }}
+            />
           </View>
         )}
         <TouchableOpacity style={styles.cameraBtn} onPress={takePhoto}>
           <FontAwesome name="camera" size={24} />
         </TouchableOpacity>
       </Camera>
+      <StatusBar style="auto" />
     </View>
   );
 };

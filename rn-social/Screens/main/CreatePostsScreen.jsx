@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     backgroundColor: "#FFFFFF",
-    borderRadius: "50%",
+    borderRadius: 50,
   },
   takePhotoContainer: {
     position: "absolute",

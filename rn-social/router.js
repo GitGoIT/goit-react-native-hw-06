@@ -1,6 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { TouchableOpacity } from "react-native";
 
 ///icons
 import { Feather } from "@expo/vector-icons";
@@ -39,21 +40,26 @@ export const useRoute = (isAuth) => {
                     }}>
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="grid" size={size} color={color} />),
-                     tabBarItemStyle: { borderRadius: "20px" },
+                     tabBarItemStyle: { borderRadius: 20, },
                      tabBarActiveBackgroundColor: "#FF6C00",
                      tabBarActiveTintColor: "#FFFFFF",
-                     headerShown: false,
+                headerRight: () => (<TouchableOpacity><Feather
+                name="log-out"
+                size={24}
+                color="#BDBDBD"
+                style={{ marginRight: 10 }}/></TouchableOpacity>
+          ),
             }} name="Публікації" component={PostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="plus" size={size} color={color} />),
-                     tabBarItemStyle: { borderRadius: "20px" },
+                     tabBarItemStyle: { borderRadius: 20, },
                      tabBarActiveBackgroundColor: "#FF6C00",
                      tabBarActiveTintColor: "#FFFFFF",
                      title: "Створити публікацію",
-            }}name="Create" component={CreatePostsScreen} />
+            }}name="Створити публікацію" component={CreatePostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="user" size={size} color={color} />),
-                    tabBarItemStyle: { borderRadius: "20px" },
+                    tabBarItemStyle: { borderRadius: 20 },
                     tabBarActiveBackgroundColor: "#FF6C00",
                     tabBarActiveTintColor: "#FFFFFF",
                     headerShown: false,

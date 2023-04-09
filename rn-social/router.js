@@ -42,14 +42,9 @@ export const useRoute = (isAuth) => {
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="grid" size={size} color={color} />),
                      tabBarItemStyle: { borderRadius: 20, },
                      tabBarActiveBackgroundColor: "#FF6C00",
-                     tabBarActiveTintColor: "#FFFFFF",
-                headerRight: () => (<TouchableOpacity><Feather
-                     name="log-out"
-                     size={24}
-                     color="#BDBDBD"
-                    style={{ marginRight: 10 }} /></TouchableOpacity>),
-                    headerTitleAlign: "center",
-            }} name="Публікації" component={PostsScreen} />
+                tabBarActiveTintColor: "#FFFFFF",
+                     headerShown: false,
+            }} name="Posts" component={PostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="plus" size={size} color={color} />),
                      tabBarItemStyle: { borderRadius: 20, },
@@ -57,7 +52,7 @@ export const useRoute = (isAuth) => {
                      tabBarActiveTintColor: "#FFFFFF",
                      title: "Створити публікацію",
                      headerTitleAlign: "center",
-            }}name="Створити публікацію" component={CreatePostsScreen} />
+            }}name="Create" component={CreatePostsScreen} />
             <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (<Feather name="user" size={size} color={color} />),
                     tabBarItemStyle: { borderRadius: 20 },

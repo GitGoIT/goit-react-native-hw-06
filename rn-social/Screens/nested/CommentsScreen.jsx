@@ -30,7 +30,7 @@ const CommentsScreen = ({ route, navigation }) => {
   const { postID, photo } = route.params;
   const { login } = useSelector((state) => state.auth);
 
-console.log("postID", postID);
+// console.log("postID", postID);
 
   const keyboardHide = () => {
     Keyboard.dismiss();
@@ -41,7 +41,7 @@ console.log("postID", postID);
      const date = formatDate(new Date());
      const commentsRef = collection(db, `posts/${postID}/comments`);
      await addDoc(commentsRef, { comment, login, date });
-     console.log(postID)
+    //  console.log(postID)
      setComment("");
   };
   

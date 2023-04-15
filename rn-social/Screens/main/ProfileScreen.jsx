@@ -7,7 +7,6 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Button,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { collection, query, where, onSnapshot } from "firebase/firestore";

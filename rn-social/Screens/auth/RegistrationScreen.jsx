@@ -65,7 +65,7 @@ export default function RegistrationScreen({navigation}) {
       const storageRef = ref(storage, `profilePictures/${uniquePostId}`);
       await uploadBytes(storageRef, file);
       const processedPhoto = await getDownloadURL(storageRef);
-      console.log("processedPhoto", processedPhoto);
+      // console.log("processedPhoto", processedPhoto);
       return processedPhoto;
     } catch (error) {
       console.log(error.message);

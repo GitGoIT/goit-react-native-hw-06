@@ -5,7 +5,6 @@ import {
   Text,
   View,
   ImageBackground,
-  Image,
   TextInput,
   TouchableOpacity,
   Platform,
@@ -47,7 +46,7 @@ export default function LoginScreen({ navigation }) {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     dispatch(authSignInUser(state));
-    console.log(state);
+    // console.log(state);
     setState(initialState);
   };
 

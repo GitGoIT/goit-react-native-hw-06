@@ -12,8 +12,11 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
 } from "react-native";
+
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -27,21 +30,27 @@ const initialState = {
 export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [dimensions, setDimentions] = useState(
-    Dimensions.get("window").width - 16 * 2
-  );
+  const [isFocus, setIsFocus] = useState({
+    email: false,
+    password: false,
+  });
+
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
+  const dispatch = useDispatch();
 
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
-  const keyboardHide = () => {
+  const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    dispatch(authSignInUser(state));
     console.log(state);
     setState(initialState);
   };
+
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -54,45 +63,62 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
-          style={styles.bgImage}
+          style={styles.image}
           source={require("../../assets/images/photo-bg2x.jpg")}
         >
-          <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          <View
+            style={{
+              ...styles.wrapperForm,
+              ...Platform.select({
+                ios: {
+                  paddingBottom: isFocus.email || isFocus.password ? 225 : 144,
+                },
+                android: {
+                  paddingBottom: isFocus.email || isFocus.password ? 20 : 144,
+                },
+              }),
+            }}
           >
-            <View
-              style={{
-                ...styles.wrapperForm,
-                paddingBottom: isShowKeyboard ? 20 : 132,
-                with: dimensions,
-              }}
-            >
-              <View style={styles.form}>
-                <Text style={styles.title}>Увійти</Text>
+            <View style={styles.form}>
+              <Text style={styles.title}>Login</Text>
+              <KeyboardAvoidingView
+                behavior={Platform.OS == "ios" ? "padding" : "height"}
+              >
                 <View>
                   <TextInput
-                    style={styles.input}
-                    textAlign={"left"}
-                    placeholder="Адреса електронної пошти"
-                    onFocus={() => setIsShowKeyboard(true)}
+                    keyboardType="email-address"
+                    onFocus={() => {
+                      setIsShowKeyboard(true);
+                      setIsFocus({ ...isFocus, email: true });
+                    }}
+                    onBlur={() => {
+                      setIsFocus({ ...isFocus, email: false });
+                    }}
+                    placeholderTextColor="#BDBDBD"
+                    placeholder="E-mail address"
                     value={state.email}
                     onChangeText={(value) =>
-                      setState((prevState) => ({
-                        ...prevState,
-                        email: value,
-                      }))
+                      setState((prevState) => ({ ...prevState, email: value }))
                     }
+                    style={{
+                      ...styles.input,
+                      borderColor: isFocus.email ? `#FF6C00` : `#E8E8E8`,
+                    }}
                   />
                   <View>
                     <TextInput
-                      style={styles.input}
-                      textAlign={"left"}
-                      placeholder="Пароль"
-                      secureTextEntry={true}
-                      onFocus={() => setIsShowKeyboard(true)}
+                      onFocus={() => {
+                        setIsShowKeyboard(true);
+                        setIsFocus({ ...isFocus, password: true });
+                      }}
+                      onBlur={() => {
+                        setIsFocus({ ...isFocus, password: false });
+                      }}
+                      placeholderTextColor="#BDBDBD"
+                      placeholder="Password"
                       value={state.password}
                       onChangeText={(value) =>
                         setState((prevState) => ({
@@ -100,27 +126,42 @@ export default function LoginScreen({ navigation }) {
                           password: value,
                         }))
                       }
+                      secureTextEntry={isSecureEntry}
+                      iconPosition="right"
+                      style={{
+                        ...styles.input,
+                        borderColor: isFocus.password ? `#FF6C00` : `#E8E8E8`,
+                      }}
                     />
-                    <Text style={styles.textPassword}>Показати</Text>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.textPassword}
+                      onPress={() => {
+                        setIsSecureEntry((prevState) => !prevState);
+                      }}
+                    >
+                      <Text>{isSecureEntry ? "Show" : "Hide"}</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.btn}
-                  onPress={keyboardHide}
-                >
-                  <Text style={styles.btnTitle}>Увійти</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.containerLink}>
-                <Text style={styles.txtLink}>Немає акаунта?</Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Registration")}>
-                  <Text style={styles.btnLink}>Зареєструватися</Text>
-                </TouchableOpacity>
-              </View>
+              </KeyboardAvoidingView>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleSubmit}
+                style={styles.button}
+              >
+                <Text style={styles.textButton}>Sign In</Text>
+              </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
+            <View style={styles.containerLink}>
+              <Text style={styles.txtLink}>Don't have an account?</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Registration")}
+              >
+                <Text style={styles.btnLink}>Sign up</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </ImageBackground>
         <StatusBar style="auto" />
       </View>
@@ -132,25 +173,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  bgImage: {
+  image: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
   },
+  title: {
+    textAlign: "center",
+    fontFamily: "Roboto-Medium",
+    fontSize: 30,
+    lineHeight: 35,
+    letterSpacing: 0.01,
+    color: "#212121",
+    marginBottom: 32,
+  },
+
   input: {
     fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    height: 50,
     borderWidth: 1,
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
-    height: 50,
-    fontSize: 16,
-    lineHeight: 19,
     padding: 16,
+    marginTop: 16,
     color: "#212121",
-    marginBottom: 16,
   },
   wrapperForm: {
+    paddingBottom: 144,
     paddingTop: 32,
     backgroundColor: "#FFFFFF",
     borderTopLeftRadius: 25,
@@ -159,28 +211,26 @@ const styles = StyleSheet.create({
   form: {
     marginHorizontal: 16,
   },
-  title: {
-    fontFamily: "Roboto-Medium",
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign: "center",
-    letterSpacing: 0.01,
-    color: "#212121",
-    marginBottom: 33,
-  },
-  btn: {
+  button: {
+    backgroundColor: "#FF6C00",
+    borderRadius: 100,
+    height: 51,
+    marginTop: 43,
+    marginBottom: 16,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FF6C00",
-    height: 51,
-    borderRadius: 100,
-    padding: 16,
-    marginTop: 26,
-    marginBottom: 16,
   },
-  btnTitle: {
-    fontFamily: "Roboto-Regular",
+  textButton: {
     color: "#FFFFFF",
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+  },
+  textPassword: {
+    position: "absolute",
+    top: "50%",
+    left: "85%",
+    color: "#1B4371",
     fontSize: 16,
     lineHeight: 19,
   },
@@ -202,20 +252,5 @@ const styles = StyleSheet.create({
     color: "blue",
     textAlign: "center",
     marginLeft: 5,
-  },
-  addIcon: {
-    position: "absolute",
-    left: "90%",
-    top: "65%",
-    width: 25,
-    height: 25,
-  },
-  textPassword: {
-    position: "absolute",
-    top: "23%",
-    left: "74%",
-    color: "#1B4371",
-    fontSize: 16,
-    lineHeight: 19,
   },
 });

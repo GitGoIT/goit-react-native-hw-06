@@ -6,20 +6,26 @@ import DefaultScreenPosts from "./../nested/DefaultScreenPosts";
 import CommentsScreen from "./../nested/CommentsScreen";
 import MapScreen from "./../nested/MapScreen";
 import { Feather } from "@expo/vector-icons";
+import {useDispatch} from "react-redux";
+import { authSignOutUser } from "../../redux/auth/authOperations"; // LogOut
 
 const NestedScreen = createStackNavigator();
 
 const PostsScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch(); // LogOut
+  const signOut = () => {        // LogOut
+    dispatch(authSignOutUser());
+  }
 
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
         options={{
-          title: "Публікації",
+          title: "Posts",
           headerTitleAlign: "center",
           headerRight: () => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={signOut}>
               <Feather
                 name="log-out"
                 size={24}
@@ -36,7 +42,7 @@ const PostsScreen = () => {
         name="Comments"
         component={CommentsScreen}
         options={{
-          title: "Коментарі",
+          title: "Comments",
           headerTitleAlign: "center",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -54,7 +60,7 @@ const PostsScreen = () => {
         name="Map"
         component={MapScreen}
         options={{
-          title: "Карта",
+          title: "Map",
           headerTitleAlign: "center",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -2,8 +2,6 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native";
-
-///icons
 import { Feather } from "@expo/vector-icons";
 
 const AuthStack = createStackNavigator();
@@ -14,8 +12,6 @@ import LoginScreen from "./Screens/auth/LoginScreen";
 import PostsScreen from "./Screens/main/PostsScreen";
 import CreatePostsScreen from "./Screens/main/CreatePostsScreen";
 import ProfileScreen from "./Screens/main/ProfileScreen";
-
-
 
 export const useRoute = (isAuth) => {
     if (!isAuth) {
@@ -50,7 +46,7 @@ export const useRoute = (isAuth) => {
                      tabBarItemStyle: { borderRadius: 20, },
                      tabBarActiveBackgroundColor: "#FF6C00",
                      tabBarActiveTintColor: "#FFFFFF",
-                     title: "Створити публікацію",
+                     title: "Create Post",
                      headerTitleAlign: "center",
             }}name="Create" component={CreatePostsScreen} />
             <MainTab.Screen options={{

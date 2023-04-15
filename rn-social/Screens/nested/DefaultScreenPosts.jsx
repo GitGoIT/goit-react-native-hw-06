@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -9,28 +10,64 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
+import { db } from "../../firebase/config";
+import { onSnapshot, collection, query } from "firebase/firestore";
 
 const DefaulScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
-  // console.log("route.params", route.params);
+  const [commentsCount, setCommentsCount] = useState({});
+
+  const { email, login, photo, } = useSelector((state) => state.auth);
+
+  const getAllPost = async () => {
+    try {
+      onSnapshot(collection(db, "posts"), (data) => {
+        const posts = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        setPosts(posts);
+        posts.forEach((post) => {
+          getCommentsCount(post.id);
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
+    getAllPost();
+  }, []);
+  
+  useEffect(() => {
+    if (route.params?.commentsCount) {
+      setCommentsCount((prev) => ({
+        ...prev,
+        [route.params.postID]: route.params.commentsCount,
+      }));
     }
   }, [route.params]);
-  console.log("posts", posts);
+
+   const getCommentsCount = async (postID) => {
+     try {
+       const commentsRef = collection(db, `posts/${postID}/comments`);
+       const queryRef = query(commentsRef);
+       const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+         const commentsCount = querySnapshot.docs.length;
+         setCommentsCount((prev) => ({ ...prev, [postID]: commentsCount }));
+       });
+       return () => unsubscribe();
+     } catch (error) {
+       console.log(error);
+       setCommentsCount((prev) => ({ ...prev, [postID]: 0 }));
+     }
+   };
 
   return (
     <View style={styles.container}>
       <View style={styles.wrapperUser}>
-        <Image
-          source={require("../../assets/images/Rectangle.jpg")}
-          style={styles.userPhoto}
-        />
+        <Image source={{ uri: photo }} style={styles.userPhoto} />
         <View style={{ flexDirection: "column" }}>
-          <Text style={styles.userName}>Natali Romanova</Text>
-          <Text style={styles.userEmail}>email@example.com</Text>
+          <Text style={styles.userName}>{login}</Text>
+          <Text style={styles.userEmail}>{email}</Text>
         </View>
       </View>
       <FlatList
@@ -44,31 +81,48 @@ const DefaulScreenPosts = ({ route, navigation }) => {
           >
             <View style={styles.postContainer}>
               <Image source={{ uri: item.photo }} style={styles.img} />
-              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.title}>{item.formValues.title}</Text>
             </View>
-
             <View style={styles.mapComments}>
-              <TouchableOpacity onPress={() => navigation.navigate("Comments")}>
-                <Feather
-                  name="message-circle"
-                  size={20}
-                  color="#BDBDBD"
-                  style={styles.commentsIcon}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Map")}
-                style={styles.map}
-              >
-                <Feather
-                  name="map-pin"
-                  size={18}
-                  color="#BDBDBD"
-                  style={styles.mapIcon}
-                />
-                <Text style={styles.textMap}>{item.location}</Text>
-              </TouchableOpacity>
+              <View
+                style={{ flexDirection: "row", alignItems: "center" }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Comments", {
+                      postID: item.id,
+                      photo: item.photo,
+                    })
+                  }
+                >
+                  <Feather
+                    name="message-circle"
+                    size={20}
+                    color={commentsCount[item.id] > 0 ? "#FF6C00" : "#BDBDBD"}
+                    style={styles.commentsIcon}
+                  />
+                </TouchableOpacity>
+                <Text style={styles.commentsCount}>
+                  {commentsCount[item.id] || 0}
+                </Text>
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Map", {
+                      location: item.location,
+                      title: item.formValues.title,
+                    })
+                  }
+                >
+                  <Feather
+                    name="map-pin"
+                    size={18}
+                    color="#BDBDBD"
+                    style={styles.mapIcon}
+                  />
+                  <Text style={styles.textMap}>{item.formValues.location}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -98,13 +152,16 @@ const styles = StyleSheet.create({
     marginRight: "auto",
     marginTop: 8,
   },
+  commentsCount: {
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    marginLeft: 9,
+  },
   img: {
     width: "100%",
     height: "100%",
     borderRadius: 8,
-  },
-  map: {
-    position: "relative",
   },
   mapIcon: {
     position: "absolute",
@@ -124,7 +181,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: 353,
   },
   wrapper: {
     width: 353,
@@ -144,6 +200,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   userName: {
+    fontWeight: "bold",
     fontSize: 13,
     lineHeight: 15,
     color: "#212121",

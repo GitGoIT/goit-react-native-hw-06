@@ -89,8 +89,6 @@ const CommentsScreen = ({ route, navigation }) => {
           </ScrollView>
         </SafeAreaView>
         <View
-          // style={styles.inputContainer}
-
           style={{
             ...styles.inputContainer,
             ...Platform.select({

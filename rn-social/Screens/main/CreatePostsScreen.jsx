@@ -21,6 +21,7 @@ import { db } from "../../firebase/config";
 import { storage } from "../../firebase/config";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 
 

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebase/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 SplashScreen.preventAutoHideAsync();

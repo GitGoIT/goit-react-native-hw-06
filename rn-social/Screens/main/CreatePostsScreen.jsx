@@ -92,7 +92,7 @@ const getLocationAddress = async (latitude, longitude) => {
       longitude,
       language: "en",
     });
-    // console.log(address);
+    console.log(address);
     if (address) {
       const locationAddress = `${address.city}, ${address.country}`;
       const translationResponse = await axios.get(
@@ -124,7 +124,7 @@ const getLocationAddress = async (latitude, longitude) => {
     if (camera && isCameraReady) {
       try {
         const photo = await camera.takePictureAsync();
-        // console.log("photo", photo.uri);
+        console.log("photo", photo.uri);
         const location = await Location.getCurrentPositionAsync({});
         setLocation(location);
         setPhoto(photo.uri);
@@ -163,7 +163,7 @@ const getLocationAddress = async (latitude, longitude) => {
       const storageRef = ref(storage, `postImage/${uniquePostId}`);
       await uploadBytes(storageRef, file);
       const processedPhoto = await getDownloadURL(storageRef);
-      // console.log("processedPhoto", processedPhoto);
+      console.log("processedPhoto", processedPhoto);
       return processedPhoto;
     } catch (error) {
       console.log(error.message);

@@ -88,7 +88,21 @@ const CommentsScreen = ({ route, navigation }) => {
             ))}
           </ScrollView>
         </SafeAreaView>
-        <View style={styles.inputContainer}>
+        <View
+          // style={styles.inputContainer}
+
+          style={{
+            ...styles.inputContainer,
+            ...Platform.select({
+              ios: {
+                paddingBottom: isShowKeyboard ? 250 : 0,
+              },
+              android: {
+                paddingBottom: isShowKeyboard ? 0 : 0,
+              },
+            }),
+          }}
+        >
           <TextInput
             style={styles.input}
             placeholder="Comment..."

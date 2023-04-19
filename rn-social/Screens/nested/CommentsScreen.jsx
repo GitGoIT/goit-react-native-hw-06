@@ -24,13 +24,8 @@ const CommentsScreen = ({ route, navigation }) => {
   const [allComments, setAllComments] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
 
- 
-
-
   const { postID, photo } = route.params;
   const { login } = useSelector((state) => state.auth);
-
-// console.log("postID", postID);
 
   const keyboardHide = () => {
     Keyboard.dismiss();
@@ -93,7 +88,7 @@ const CommentsScreen = ({ route, navigation }) => {
             ...styles.inputContainer,
             ...Platform.select({
               ios: {
-                paddingBottom: isShowKeyboard ? 250 : 0,
+                paddingBottom: isShowKeyboard ? 287 : 0,
               },
               android: {
                 paddingBottom: isShowKeyboard ? 0 : 0,
